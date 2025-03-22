@@ -331,42 +331,41 @@ const PerceptronNetworkAnimation = () => {
       <h2 className="text-2xl font-bold mb-6">Animación de Perceptrón - Compuerta AND</h2>
       
       <div className="flex flex-wrap w-full gap-4 mb-4">
-        {/* Columna izquierda: Perceptrón */}
-        <div className="w-full md:w-7/12 bg-white rounded-lg shadow p-4 mb-4">
+        {/* Contenedor principal que divide en dos paneles iguales */}
+        <div className="w-full md:w-1/2 bg-white rounded-lg shadow p-4">
           <h3 className="font-bold mb-4 text-center">Representación del Modelo</h3>
           <div className="flex justify-center mb-4">
             {renderPerceptron()}
           </div>
         </div>
         
-        {/* Columna derecha: Controles y leyenda */}
-        <div className="w-full md:w-4/12 bg-white rounded-lg shadow p-4 mb-4">
+        <div className="w-full md:w-1/2 bg-white rounded-lg shadow p-4">
           <h3 className="font-bold mb-4">Controles</h3>
-          <div className="flex gap-2 mb-4">
+          <div className="flex justify-center gap-2 mb-4">
             <button 
               onClick={() => setIsRunning(!isRunning)} 
-              className={`px-4 py-2 rounded ${isComplete ? 'bg-gray-300' : (isRunning ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600')} text-white`}
+              className={`px-6 py-3 rounded ${isComplete ? 'bg-gray-300' : (isRunning ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600')} text-white`}
               disabled={isComplete}
             >
               {isRunning ? 'Pausar' : 'Auto'}
             </button>
             <button 
               onClick={trainStep} 
-              className={`px-4 py-2 rounded ${phase === 'feedforward' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-red-500 hover:bg-red-600'} text-white`}
+              className={`px-6 py-3 rounded ${phase === 'feedforward' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-red-500 hover:bg-red-600'} text-white`}
               disabled={isRunning || isComplete}
             >
-              {phase === 'feedforward' ? 'Forward ▶' : 'Backprop ▶'}
+              {phase === 'feedforward' ? 'Forward ▶' : 'Backprop ◀'}
             </button>
             <button 
               onClick={resetTraining} 
-              className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
+              className="px-6 py-3 rounded bg-blue-500 hover:bg-blue-600 text-white"
             >
               Reiniciar
             </button>
           </div>
           
-          <div className="flex items-center gap-4 mb-2">
-            <label>Tasa de aprendizaje:</label>
+          <div className="flex items-center gap-4 mb-6">
+            <label className="whitespace-nowrap">Tasa de aprendizaje:</label>
             <input 
               type="range" 
               min="0.01" 
@@ -374,18 +373,18 @@ const PerceptronNetworkAnimation = () => {
               step="0.01" 
               value={learningRate} 
               onChange={e => setLearningRate(parseFloat(e.target.value))}
-              className="w-32"
+              className="w-full"
             />
-            <span className="font-mono">{learningRate.toFixed(2)}</span>
+            <span className="font-mono w-12 text-right">{learningRate.toFixed(2)}</span>
           </div>
           
           <div className="mt-4">
-            <h4 className="font-bold">Leyenda:</h4>
+            <h4 className="font-bold mb-2">Leyenda:</h4>
             <ul className="text-sm">
-              <li className="flex items-center"><span className="inline-block w-3 h-3 bg-green-500 rounded-full mr-1"></span> Peso positivo</li>
-              <li className="flex items-center"><span className="inline-block w-3 h-3 bg-red-500 rounded-full mr-1"></span> Peso negativo</li>
-              <li className="flex items-center"><span className="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-1"></span> Sumador</li>
-              <li className="flex items-center"><span className="inline-block w-3 h-3 bg-green-200 rounded-full mr-1"></span> Función de activación (escalón)</li>
+              <li className="flex items-center mb-1"><span className="inline-block w-3 h-3 bg-green-500 rounded-full mr-1"></span> Peso positivo</li>
+              <li className="flex items-center mb-1"><span className="inline-block w-3 h-3 bg-red-500 rounded-full mr-1"></span> Peso negativo</li>
+              <li className="flex items-center mb-1"><span className="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-1"></span> Sumador</li>
+              <li className="flex items-center mb-1"><span className="inline-block w-3 h-3 bg-green-200 rounded-full mr-1"></span> Función de activación (escalón)</li>
             </ul>
           </div>
         </div>
