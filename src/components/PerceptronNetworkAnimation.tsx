@@ -295,12 +295,12 @@ const PerceptronNetworkAnimation = () => {
                 strokeWidth={Math.abs(w0) * 1.5 + 1} />
           <text x="130" y="220" fontSize="12" fontWeight="bold">{w0.toFixed(2)}</text>
           
-          {/* Sumador a Función de activación */}
-          <line x1="270" y1="160" x2="330" y2="160" stroke="#000" 
+          {/* Sumador a Función de activación - MODIFICADO para que la flecha no esté dentro del círculo */}
+          <line x1="270" y1="160" x2="310" y2="160" stroke="#000" 
                 strokeWidth="2" markerEnd="url(#arrowhead)" />
           
-          {/* Función de activación a Salida */}
-          <line x1="390" y1="160" x2="430" y2="160" stroke="#000" 
+          {/* Función de activación a Salida - MODIFICADO para que la flecha no esté dentro del círculo */}
+          <line x1="390" y1="160" x2="410" y2="160" stroke="#000" 
                 strokeWidth="2" markerEnd="url(#arrowhead)" />
         </g>
         
@@ -330,10 +330,64 @@ const PerceptronNetworkAnimation = () => {
     <div className="flex flex-col items-center max-w-4xl mx-auto p-4 bg-gray-50 rounded-lg shadow">
       <h2 className="text-2xl font-bold mb-6">Animación de Perceptrón - Compuerta AND</h2>
       
-      <div className="w-full bg-white rounded-lg shadow p-4 mb-4">
-        <h3 className="font-bold mb-4 text-center">Representación del Modelo</h3>
-        <div className="flex justify-center mb-4">
-          {renderPerceptron()}
+      <div className="flex flex-wrap w-full gap-4 mb-4">
+        {/* Columna izquierda: Perceptrón */}
+        <div className="w-full md:w-7/12 bg-white rounded-lg shadow p-4 mb-4">
+          <h3 className="font-bold mb-4 text-center">Representación del Modelo</h3>
+          <div className="flex justify-center mb-4">
+            {renderPerceptron()}
+          </div>
+        </div>
+        
+        {/* Columna derecha: Controles y leyenda */}
+        <div className="w-full md:w-4/12 bg-white rounded-lg shadow p-4 mb-4">
+          <h3 className="font-bold mb-4">Controles</h3>
+          <div className="flex gap-2 mb-4">
+            <button 
+              onClick={() => setIsRunning(!isRunning)} 
+              className={`px-4 py-2 rounded ${isComplete ? 'bg-gray-300' : (isRunning ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600')} text-white`}
+              disabled={isComplete}
+            >
+              {isRunning ? 'Pausar' : 'Auto'}
+            </button>
+            <button 
+              onClick={trainStep} 
+              className={`px-4 py-2 rounded ${phase === 'feedforward' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-red-500 hover:bg-red-600'} text-white`}
+              disabled={isRunning || isComplete}
+            >
+              {phase === 'feedforward' ? 'Forward ▶' : 'Backprop ▶'}
+            </button>
+            <button 
+              onClick={resetTraining} 
+              className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              Reiniciar
+            </button>
+          </div>
+          
+          <div className="flex items-center gap-4 mb-2">
+            <label>Tasa de aprendizaje:</label>
+            <input 
+              type="range" 
+              min="0.01" 
+              max="1" 
+              step="0.01" 
+              value={learningRate} 
+              onChange={e => setLearningRate(parseFloat(e.target.value))}
+              className="w-32"
+            />
+            <span className="font-mono">{learningRate.toFixed(2)}</span>
+          </div>
+          
+          <div className="mt-4">
+            <h4 className="font-bold">Leyenda:</h4>
+            <ul className="text-sm">
+              <li className="flex items-center"><span className="inline-block w-3 h-3 bg-green-500 rounded-full mr-1"></span> Peso positivo</li>
+              <li className="flex items-center"><span className="inline-block w-3 h-3 bg-red-500 rounded-full mr-1"></span> Peso negativo</li>
+              <li className="flex items-center"><span className="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-1"></span> Sumador</li>
+              <li className="flex items-center"><span className="inline-block w-3 h-3 bg-green-200 rounded-full mr-1"></span> Función de activación (escalón)</li>
+            </ul>
+          </div>
         </div>
       </div>
       
@@ -445,56 +499,6 @@ const PerceptronNetworkAnimation = () => {
           ) : (
             logs.map((log, idx) => <p key={idx}>{log}</p>)
           )}
-        </div>
-      </div>
-      
-      <div className="flex gap-2 mb-4">
-        <button 
-          onClick={() => setIsRunning(!isRunning)} 
-          className={`px-4 py-2 rounded ${isComplete ? 'bg-gray-300' : (isRunning ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600')} text-white`}
-          disabled={isComplete}
-        >
-          {isRunning ? 'Pausar' : 'Auto'}
-        </button>
-        <button 
-          onClick={trainStep} 
-          className={`px-4 py-2 rounded ${phase === 'feedforward' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-orange-500 hover:bg-orange-600'} text-white`}
-          disabled={isRunning || isComplete}
-        >
-          {phase === 'feedforward' ? 'Forward ▶' : 'Backprop ▶'}
-        </button>
-        <button 
-          onClick={resetTraining} 
-          className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
-        >
-          Reiniciar
-        </button>
-      </div>
-      
-      <div className="w-full bg-white rounded-lg shadow p-4">
-        <h3 className="font-bold mb-2">Controles</h3>
-        <div className="flex items-center gap-4 mb-2">
-          <label>Tasa de aprendizaje:</label>
-          <input 
-            type="range" 
-            min="0.01" 
-            max="1" 
-            step="0.01" 
-            value={learningRate} 
-            onChange={e => setLearningRate(parseFloat(e.target.value))}
-            className="w-32"
-          />
-          <span className="font-mono">{learningRate.toFixed(2)}</span>
-        </div>
-        
-        <div className="mt-4">
-          <h4 className="font-bold">Leyenda:</h4>
-          <ul className="text-sm">
-            <li className="flex items-center"><span className="inline-block w-3 h-3 bg-green-500 rounded-full mr-1"></span> Peso positivo</li>
-            <li className="flex items-center"><span className="inline-block w-3 h-3 bg-red-500 rounded-full mr-1"></span> Peso negativo</li>
-            <li className="flex items-center"><span className="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-1"></span> Sumador</li>
-            <li className="flex items-center"><span className="inline-block w-3 h-3 bg-green-200 rounded-full mr-1"></span> Función de activación (escalón)</li>
-          </ul>
         </div>
       </div>
     </div>
