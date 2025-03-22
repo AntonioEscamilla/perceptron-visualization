@@ -1,43 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
+// Definir interfaces para mejorar el tipado
+interface TrainingData {
+  inputs: [number, number];
+  output: number;
+}
 
 const PerceptronNetworkAnimation = () => {
-  // Datos de entrenamiento para compuerta AND (orden invertido)
-  const trainingData = [
+  // Datos de entrenamiento para compuerta AND
+  const trainingData: TrainingData[] = [
     { inputs: [1, 1], output: 1 },
     { inputs: [1, 0], output: 0 },
     { inputs: [0, 1], output: 0 },
     { inputs: [0, 0], output: 0 }
   ];
   
-  // Estados para los pesos, bias, el estado de la animación y los logs
-  const [weights, setWeights] = useState([1, 1]);
-  const [bias, setBias] = useState(-3);
-  const [isRunning, setIsRunning] = useState(false);
-  const [epoch, setEpoch] = useState(0);
-  const [learningRate, setLearningRate] = useState(1);
-  const [currentSample, setCurrentSample] = useState(0);
-  const [prediction, setPrediction] = useState(null);
-  const [weightedSum, setWeightedSum] = useState(0);
-  const [logs, setLogs] = useState([]);
-  const [totalError, setTotalError] = useState(1);
-  const [isComplete, setIsComplete] = useState(false);
-  const [isConverged, setIsConverged] = useState(false);
-  const [phase, setPhase] = useState('feedforward');
-  const [currentPredictions, setCurrentPredictions] = useState(new Array(trainingData.length).fill(null));
+  // Estados con tipos específicos
+  const [weights, setWeights] = useState<[number, number]>([1, 1]);
+  const [bias, setBias] = useState<number>(-3);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [epoch, setEpoch] = useState<number>(0);
+  const [learningRate, setLearningRate] = useState<number>(1);
+  const [currentSample, setCurrentSample] = useState<number>(0);
+  const [prediction, setPrediction] = useState<number | null>(null);
+  const [weightedSum, setWeightedSum] = useState<number>(0);
+  const [logs, setLogs] = useState<string[]>([]);
+  const [totalError, setTotalError] = useState<number>(1);
+  const [isComplete, setIsComplete] = useState<boolean>(false);
+  const [isConverged, setIsConverged] = useState<boolean>(false);
+  const [phase, setPhase] = useState<'feedforward' | 'backprop'>('feedforward');
+  const [currentPredictions, setCurrentPredictions] = useState<(number | null)[]>(new Array(trainingData.length).fill(null));
   
   // Función para predecir la salida del perceptrón
-  const predict = (inputs, w, b) => {
+  const predict = (inputs: [number, number], w: [number, number], b: number): number => {
     const sum = inputs[0] * w[0] + inputs[1] * w[1] + b;
     return sum >= 0 ? 1 : 0;
   };
   
   // Calcular la suma ponderada
-  const calculateSum = (inputs, w, b) => {
+  const calculateSum = (inputs: [number, number], w: [number, number], b: number): number => {
     return inputs[0] * w[0] + inputs[1] * w[1] + b;
   };
   
   // Calcular el error total
-  const calculateTotalError = (w, b) => {
+  const calculateTotalError = (w: [number, number], b: number): number => {
     let totalError = 0;
     for (let i = 0; i < trainingData.length; i++) {
       const sample = trainingData[i];
@@ -78,8 +84,7 @@ const PerceptronNetworkAnimation = () => {
       setPhase('backprop');
     } else {
       // Fase de propagación hacia atrás
-      const sum = weightedSum;
-      const pred = prediction;
+      const pred = prediction !== null ? prediction : 0;
       
       // Calcular error
       const error = sample.output - pred;
@@ -88,7 +93,7 @@ const PerceptronNetworkAnimation = () => {
       if (!isConverged) {
         // Actualizar pesos y bias si hay error
         if (error !== 0) {
-          const newWeights = [
+          const newWeights: [number, number] = [
             weights[0] + learningRate * error * sample.inputs[0],
             weights[1] + learningRate * error * sample.inputs[1]
           ];
@@ -163,15 +168,21 @@ const PerceptronNetworkAnimation = () => {
       );
       setCurrentPredictions(allPredictions);
     }
-  }, [isComplete, weights, bias, trainingData]);
+  }, [isComplete, weights, bias]);
   
   // Efecto para la animación automática
   useEffect(() => {
-    let interval;
+    let intervalId: number | undefined;
+    
     if (isRunning) {
-      interval = setInterval(trainStep, 1000);
+      intervalId = window.setInterval(trainStep, 1000);
     }
-    return () => clearInterval(interval);
+    
+    return () => {
+      if (intervalId !== undefined) {
+        clearInterval(intervalId);
+      }
+    };
   }, [isRunning, currentSample, weights, bias, epoch, learningRate, phase]);
   
   // Reiniciar el entrenamiento
@@ -301,7 +312,7 @@ const PerceptronNetworkAnimation = () => {
               Target: {sample.output}
             </text>
             <text x="430" y="115" fontSize="12" textAnchor="middle">
-              Error: {sample.output - prediction}
+              Error: {sample.output - (prediction ?? 0)}
             </text>
           </g>
         )}
