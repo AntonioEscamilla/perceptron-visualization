@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "901d848dac99f1d5caaa08417a5b265f",
+    "revision": "b9fe3392188235c949fe48d1abcfeaec",
     "url": "/perceptron-visualization/index.html"
   },
   {
-    "revision": "81dce7819d637d735e10",
-    "url": "/perceptron-visualization/static/css/main.435d5fe5.chunk.css"
+    "revision": "6fd62f969ae6b27d8518",
+    "url": "/perceptron-visualization/static/css/main.17741bea.chunk.css"
   },
   {
     "revision": "abf5ac9533b5e2397fe5",
@@ -20,7 +20,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/perceptron-visualization/static/js/3.3ce5a02c.chunk.js"
   },
   {
-    "revision": "81dce7819d637d735e10",
+    "revision": "6fd62f969ae6b27d8518",
     "url": "/perceptron-visualization/static/js/main.d878cb76.chunk.js"
   },
   {

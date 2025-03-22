@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/perceptron-visualization/static/css/main.435d5fe5.chunk.css",
+    "main.css": "/perceptron-visualization/static/css/main.17741bea.chunk.css",
     "main.js": "/perceptron-visualization/static/js/main.d878cb76.chunk.js",
     "main.js.map": "/perceptron-visualization/static/js/main.d878cb76.chunk.js.map",
     "runtime-main.js": "/perceptron-visualization/static/js/runtime-main.3d0d56d6.js",
@@ -10,15 +10,15 @@
     "static/js/3.3ce5a02c.chunk.js": "/perceptron-visualization/static/js/3.3ce5a02c.chunk.js",
     "static/js/3.3ce5a02c.chunk.js.map": "/perceptron-visualization/static/js/3.3ce5a02c.chunk.js.map",
     "index.html": "/perceptron-visualization/index.html",
-    "precache-manifest.5263c73ff241ef2fe8eccde97d2de195.js": "/perceptron-visualization/precache-manifest.5263c73ff241ef2fe8eccde97d2de195.js",
+    "precache-manifest.7f145f49a93f7d07cf0a87e79f796235.js": "/perceptron-visualization/precache-manifest.7f145f49a93f7d07cf0a87e79f796235.js",
     "service-worker.js": "/perceptron-visualization/service-worker.js",
-    "static/css/main.435d5fe5.chunk.css.map": "/perceptron-visualization/static/css/main.435d5fe5.chunk.css.map",
+    "static/css/main.17741bea.chunk.css.map": "/perceptron-visualization/static/css/main.17741bea.chunk.css.map",
     "static/js/2.8153b4b1.chunk.js.LICENSE.txt": "/perceptron-visualization/static/js/2.8153b4b1.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.3d0d56d6.js",
     "static/js/2.8153b4b1.chunk.js",
-    "static/css/main.435d5fe5.chunk.css",
+    "static/css/main.17741bea.chunk.css",
     "static/js/main.d878cb76.chunk.js"
   ]
 }
