@@ -1,3 +1,4 @@
+import DecisionBoundaryVisualization from './DecisionBoundaryVisualization';
 import { useState, useEffect } from 'react';
 
 // Definir interfaces para mejorar el tipado
@@ -403,7 +404,7 @@ const PerceptronNetworkAnimation = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="w-full bg-white rounded-lg shadow p-4 mb-4">
         <h3 className="font-bold mb-2">Estado del Entrenamiento</h3>
         <div className="flex flex-col space-y-2">
@@ -498,6 +499,14 @@ const PerceptronNetworkAnimation = () => {
           </table>
         </div>
       </div>
+
+      <DecisionBoundaryVisualization
+        weights={weights}
+        bias={bias}
+        trainingData={trainingData}
+        currentSample={currentSample}
+        isRunning={isRunning}
+      />
       
       <div className="w-full bg-white rounded-lg shadow p-4 mb-4">
         <h3 className="font-bold mb-2">Registro de Actualización de Pesos</h3>
