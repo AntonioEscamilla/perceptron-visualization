@@ -1,5 +1,5 @@
-import DecisionBoundaryVisualization from './DecisionBoundaryVisualization';
 import { useState, useEffect } from 'react';
+import DecisionBoundaryVisualization from './DecisionBoundaryVisualization';
 
 // Definir interfaces para mejorar el tipado
 interface TrainingData {
@@ -157,6 +157,29 @@ const PerceptronNetworkAnimation = () => {
       setPrediction(null);
       setWeightedSum(0);
     }
+  };
+  
+  // Función para generar pesos aleatorios
+  const randomizeWeights = () => {
+    // Generar valores aleatorios entre -3 y 3
+    const randomW1 = Math.random() * 6 - 3; // -3 a 3
+    const randomW2 = Math.random() * 6 - 3; // -3 a 3
+    const randomBias = Math.random() * 6 - 3; // -3 a 3
+    
+    // Actualizar los estados
+    setWeights([randomW1, randomW2]);
+    setBias(randomBias);
+    
+    // Resetear algunas variables para evitar inconsistencias
+    setPrediction(null);
+    setWeightedSum(0);
+    setCurrentPredictions(new Array(trainingData.length).fill(null));
+    
+    // Agregar un log
+    setLogs(prevLogs => [
+      ...prevLogs,
+      `Pesos generados aleatoriamente: [${randomW1.toFixed(2)}, ${randomW2.toFixed(2)}], Bias: ${randomBias.toFixed(2)}`
+    ].slice(-10));
   };
   
   // Efecto para actualizar todas las predicciones cuando se completa el entrenamiento
@@ -377,6 +400,13 @@ const PerceptronNetworkAnimation = () => {
             >
               Reiniciar
             </button>
+            {/* Nuevo botón para generación de pesos aleatorios */}
+            <button 
+              onClick={randomizeWeights} 
+              className="px-6 py-3 rounded bg-purple-500 hover:bg-purple-600 text-white"
+            >
+              Pesos Random
+            </button>
           </div>
           
           <div className="flex items-center gap-4 mb-6">
@@ -404,7 +434,7 @@ const PerceptronNetworkAnimation = () => {
           </div>
         </div>
       </div>
-
+      
       <div className="w-full bg-white rounded-lg shadow p-4 mb-4">
         <h3 className="font-bold mb-2">Estado del Entrenamiento</h3>
         <div className="flex flex-col space-y-2">
@@ -499,7 +529,8 @@ const PerceptronNetworkAnimation = () => {
           </table>
         </div>
       </div>
-
+      
+      {/* Visualización del Espacio de Decisión */}
       <DecisionBoundaryVisualization
         weights={weights}
         bias={bias}
