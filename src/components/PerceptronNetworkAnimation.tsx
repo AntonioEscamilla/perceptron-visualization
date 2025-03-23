@@ -25,7 +25,6 @@ const PerceptronNetworkAnimation = () => {
   const [prediction, setPrediction] = useState<number | null>(null);
   const [weightedSum, setWeightedSum] = useState<number>(0);
   const [logs, setLogs] = useState<string[]>([]);
-  const [totalError, setTotalError] = useState<number>(1);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [isConverged, setIsConverged] = useState<boolean>(false);
   const [phase, setPhase] = useState<'feedforward' | 'backprop'>('feedforward');
@@ -44,13 +43,13 @@ const PerceptronNetworkAnimation = () => {
   
   // Calcular el error total
   const calculateTotalError = (w: [number, number], b: number): number => {
-    let totalError = 0;
+    let errorSum = 0;
     for (let i = 0; i < trainingData.length; i++) {
       const sample = trainingData[i];
       const pred = predict(sample.inputs, w, b);
-      totalError += Math.abs(sample.output - pred);
+      errorSum += Math.abs(sample.output - pred);
     }
-    return totalError;
+    return errorSum;
   };
 
   // Función para entrenar al perceptrón
@@ -130,7 +129,6 @@ const PerceptronNetworkAnimation = () => {
       if (nextSample === 0) {
         setEpoch(epoch + 1);
         const newTotalError = calculateTotalError(weights, bias);
-        setTotalError(newTotalError);
         
         // Si no había convergido antes y ahora el error es 0, marcar como convergido
         if (!isConverged && newTotalError === 0) {
@@ -194,7 +192,6 @@ const PerceptronNetworkAnimation = () => {
     setPrediction(null);
     setWeightedSum(0);
     setLogs([]);
-    setTotalError(1);
     setIsComplete(false);
     setIsConverged(false);
     setIsRunning(false);
@@ -210,6 +207,10 @@ const PerceptronNetworkAnimation = () => {
     const w1 = weights[0];
     const w2 = weights[1];
     const w0 = bias;
+    
+    // Determinar si mostrar el punto rojo en la función escalón
+    // Solo se muestra cuando hay una suma ponderada válida (en fase backprop, después del feedforward)
+    const showRedDot = phase === 'backprop' && prediction !== null;
     
     return (
       <svg width="500" height="280" viewBox="0 0 500 280">
@@ -253,22 +254,33 @@ const PerceptronNetworkAnimation = () => {
           
           {/* Función escalón mejorada */}
           <svg x="330" y="130" width="60" height="60" viewBox="0 0 60 60" overflow="visible">
-            <line x1="0" y1="30" x2="20" y2="30" stroke="black" strokeWidth="2" />
-            <line x1="20" y1="30" x2="20" y2="10" stroke="black" strokeWidth="2" />
-            <line x1="20" y1="10" x2="60" y2="10" stroke="black" strokeWidth="2" />
+            {/* Eje X */}
+            <line x1="0" y1="50" x2="60" y2="50" stroke="#777" strokeWidth="0.5" />
+            
+            {/* Eje Y */}
+            <line x1="20" y1="0" x2="20" y2="50" stroke="#777" strokeWidth="0.5" />
+            
+            {/* Etiqueta de la función */}
             <text x="30" y="5" fontSize="10" textAnchor="middle">f(x)</text>
             
-            {/* Añadir ejes */}
-            <line x1="0" y1="50" x2="60" y2="50" stroke="#777" strokeWidth="0.5" /> {/* Eje X */}
-            <line x1="20" y1="0" x2="20" y2="50" stroke="#777" strokeWidth="0.5" /> {/* Eje Y */}
+            {/* Función escalón */}
+            <line x1="0" y1="40" x2="20" y2="40" stroke="black" strokeWidth="2" /> {/* Parte horizontal para x<0 (valor 0) */}
+            <line x1="20" y1="40" x2="20" y2="20" stroke="black" strokeWidth="2" /> {/* Parte vertical */}
+            <line x1="20" y1="20" x2="60" y2="20" stroke="black" strokeWidth="2" /> {/* Parte horizontal para x>=0 (valor 1) */}
             
-            {/* Punto que muestra el valor actual en la función */}
-            <circle 
-              cx={weightedSum < 0 ? 10 : 40} 
-              cy={weightedSum < 0 ? 30 : 10} 
-              r="3" 
-              fill="red" 
-            />
+            {/* Valores de la función */}
+            <text x="10" y="38" fontSize="8" textAnchor="middle" fill="#666">0</text>
+            <text x="40" y="18" fontSize="8" textAnchor="middle" fill="#666">1</text>
+            
+            {/* Punto que muestra el valor actual en la función - solo visible después de un feedforward */}
+            {showRedDot && (
+              <circle 
+                cx={weightedSum < 0 ? 10 : 40} 
+                cy={weightedSum < 0 ? 40 : 20} 
+                r="3" 
+                fill="red" 
+              />
+            )}
           </svg>
         </g>
         
@@ -330,8 +342,9 @@ const PerceptronNetworkAnimation = () => {
     <div className="flex flex-col items-center max-w-4xl mx-auto p-4 bg-gray-50 rounded-lg shadow">
       <h2 className="text-2xl font-bold mb-6">Animación de Perceptrón - Compuerta AND</h2>
       
-      <div className="flex flex-wrap w-full gap-4 mb-4">
-        {/* Contenedor principal que divide en dos paneles iguales */}
+      {/* Contenedor principal con dos paneles lado a lado */}
+      <div className="flex flex-col md:flex-row w-full gap-4 mb-4">
+        {/* Panel izquierdo: Perceptrón */}
         <div className="w-full md:w-1/2 bg-white rounded-lg shadow p-4">
           <h3 className="font-bold mb-4 text-center">Representación del Modelo</h3>
           <div className="flex justify-center mb-4">
@@ -339,6 +352,7 @@ const PerceptronNetworkAnimation = () => {
           </div>
         </div>
         
+        {/* Panel derecho: Controles */}
         <div className="w-full md:w-1/2 bg-white rounded-lg shadow p-4">
           <h3 className="font-bold mb-4">Controles</h3>
           <div className="flex justify-center gap-2 mb-4">
@@ -403,14 +417,6 @@ const PerceptronNetworkAnimation = () => {
                   : '⟳ Entrenando...')}
             </div>
           </div>
-          <div className="flex items-center">
-            <div className="w-32">Error total:</div>
-            <div className="font-mono">{totalError}</div>
-          </div>
-          <div className="flex items-center">
-            <div className="w-32">Época actual:</div>
-            <div className="font-mono">{epoch}</div>
-          </div>
         </div>
       </div>
       
@@ -435,8 +441,11 @@ const PerceptronNetworkAnimation = () => {
             <div>Tasa de aprendizaje:</div>
             <div className="font-mono">{learningRate}</div>
             
-            <div>Error total:</div>
-            <div className="font-mono">{totalError}</div>
+            <div>Error:</div>
+            <div className="font-mono">
+              {phase === 'backprop' || prediction !== null ? 
+                (trainingData[currentSample].output - (prediction ?? 0)) : '...'}
+            </div>
             
             <div>Muestra actual:</div>
             <div className="font-mono">[{trainingData[currentSample].inputs.join(', ')}] → {trainingData[currentSample].output}</div>
