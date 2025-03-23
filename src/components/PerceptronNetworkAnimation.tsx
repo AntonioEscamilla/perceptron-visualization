@@ -389,7 +389,7 @@ const PerceptronNetworkAnimation = () => {
             </button>
             <button 
               onClick={trainStep} 
-              className={`px-6 py-3 rounded ${phase === 'feedforward' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-red-500 hover:bg-red-600'} text-white`}
+              className={`px-6 py-3 rounded ${phase === 'feedforward' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-orange-500 hover:bg-orange-600'} text-white`}
               disabled={isRunning || isComplete}
             >
               {phase === 'feedforward' ? 'Forward ▶' : 'Backprop ◀'}
@@ -399,13 +399,6 @@ const PerceptronNetworkAnimation = () => {
               className="px-6 py-3 rounded bg-blue-500 hover:bg-blue-600 text-white"
             >
               Reiniciar
-            </button>
-            {/* Nuevo botón para generación de pesos aleatorios */}
-            <button 
-              onClick={randomizeWeights} 
-              className="px-6 py-3 rounded bg-purple-500 hover:bg-purple-600 text-white"
-            >
-              Pesos Random
             </button>
           </div>
           
@@ -431,6 +424,16 @@ const PerceptronNetworkAnimation = () => {
               <li className="flex items-center mb-1"><span className="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-1"></span> Sumador</li>
               <li className="flex items-center mb-1"><span className="inline-block w-3 h-3 bg-green-200 rounded-full mr-1"></span> Función de activación (escalón)</li>
             </ul>
+
+            <div className="mt-4 flex justify-center">
+              <button 
+                onClick={randomizeWeights} 
+                className="px-6 py-3 rounded bg-purple-500 hover:bg-purple-600 text-white"
+              >
+                Pesos Random
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
