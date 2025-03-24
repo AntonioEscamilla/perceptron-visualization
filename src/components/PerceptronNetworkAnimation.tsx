@@ -354,7 +354,7 @@ const PerceptronNetworkAnimation = () => {
         )}
         
         {/* Fase actual */}
-        <rect x="240" y="30" width="160" height="30" fill={phase === 'feedforward' ? "#E3F2FD" : "#FFEBEE"} stroke="#9E9E9E" strokeWidth="1" rx="5" />
+        <rect x="240" y="30" width="160" height="30" fill={phase === 'feedforward' ? "#E3F2FD" : "#FFF3E0"} stroke="#9E9E9E" strokeWidth="1" rx="5" />
         <text x="320" y="50" fontSize="14" fontWeight="bold" textAnchor="middle">
           Fase: {phase === 'feedforward' ? "Forward" : "Backprop"}
         </text>
@@ -389,7 +389,8 @@ const PerceptronNetworkAnimation = () => {
             </button>
             <button 
               onClick={trainStep} 
-              className={`px-6 py-3 rounded ${phase === 'feedforward' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-orange-500 hover:bg-orange-600'} text-white`}
+              className={`px-6 py-3 rounded text-white`}
+              style={{backgroundColor: phase === 'feedforward' ? '#3b82f6' : '#FF9800'}}
               disabled={isRunning || isComplete}
             >
               {phase === 'feedforward' ? 'Forward ▶' : 'Backprop ◀'}
@@ -443,7 +444,14 @@ const PerceptronNetworkAnimation = () => {
         <div className="flex flex-col space-y-2">
           <div className="flex items-center">
             <div className="w-32">Estado:</div>
-            <div className={`font-medium ${isConverged ? (isComplete ? 'text-green-600' : 'text-blue-600') : 'text-amber-600'}`}>
+            <div 
+              className="font-medium" 
+              style={{ 
+                color: isConverged 
+                  ? (isComplete ? '#16a34a' : '#2563eb') 
+                  : '#FF9800'
+              }}
+            >
               {isComplete 
                 ? '✓ Entrenamiento completado' 
                 : (isConverged 
